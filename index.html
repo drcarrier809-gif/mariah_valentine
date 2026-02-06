@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Be My Valentine</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffb6c1, #ffdde1);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      color: #b30047;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px #ffffff;
+    }
+
+    #countdown {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    #photo-container {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    #photo-container img {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 4px solid #ff4d79;
+      box-shadow: 0 0 15px rgba(179, 0, 71, 0.4);
+    }
+
+    #buttons {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    button {
+      padding: 15px 35px;
+      font-size: 22px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: 0.5s;
+    }
+
+    #yesBtn {
+      background-color: #ff4d79;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #yesBtn:hover {
+      background-color: #ff1a5c;
+      transform: translateY(-2px);
+    }
+
+    #noBtn {
+      position: absolute;
+      background-color: #ffffff;
+      border: 2px solid #ff4d79;
+      color: #ff4d79;
+      left: 60%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #message {
+      margin-top: 0px;
+      font-size: 17px;
+      min-height: 100px;
+    }
+
+    #signature {
+      position: absolute;
+      bottom: 15px;
+      font-size: 18px;
+      color: #b30047;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -40px;
+      color: #ff4d79;
+      font-size: 24px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-110vh) translateX(-40px) scale(1.6);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Mariah, will you be my Valentine?</h1>
+<div id="countdown"></div>
+
+<div id="photo-container">
+  <img src="Mariah Valentine.jpeg">
+</div>
+
+<div id="buttons">
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
+</div>
+
+<div id="message"></div>
+
+<div id="signature">– Yours Truly, Straightlace;) </div>
+
+<script>
+  // Runaway No button
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const message = document.getElementById("message");
+
+  document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const distance = Math.hypot(
+      e.clientX - (rect.left + rect.width / 2),
+      e.clientY - (rect.top + rect.height / 2)
+    );
+
+    if (distance < 20) {
+      const maxX = window.innerWidth - rect.width - 200;
+      const maxY = window.innerHeight - rect.height - 100;
+      const minX = window.innerWidth - rect.bottom - 10;
+      const minY = window.innerHeight - rect.top - 10;
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+      noBtn.style.left = newX + "px";
+      noBtn.style.top = newY + "px";
+
+    }
+   
+  noBtn.style.left = newX + "px";
+  noBtn.style.top = newY + "px";
+}
+  );
+
+  // Yes button message
+  yesBtn.addEventListener("click", () => {
+    message.textContent = "I fall for you a little more every day, and loving you has become one of the sweetest parts of my life. You bring color to my ordinary moments, warmth to my hardest days, and joy to everything in between. Your creativity, your faith, your kindness, and the way you see the world inspire me in ways I never expected. I’m grateful for every laugh we share, every quiet moment, and every memory we’ve made so far. I hope this Valentine’s Day reminds you just how deeply cherished you are — today and always. You just made my whole world brighter. ❤️";
+  });
+
+  // Floating hearts generator
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.textContent = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+    heart.style.fontSize = 18 + Math.random() * 18 + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 8000);
+  }
+  setInterval(createHeart, 700);
+
+  // Countdown to Valentine's Day (Feb 14)
+  const countdownEl = document.getElementById("countdown");
+  function updateCountdown() {
+    const now = new Date();
+    const year = now.getMonth() > 1 || (now.getMonth() === 1 && now.getDate() > 14)
+      ? now.getFullYear() + 1
+      : now.getFullYear();
+    const valentine = new Date(year, 1, 14, 0, 0, 0); // Feb is month 1 (0-based)
+    const diff = valentine - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownEl.textContent =
+      "Countdown to Valentine’s Day: " +
+      days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+   { once: true };
+</script>
+
+</body>
+</html>
